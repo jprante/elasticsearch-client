@@ -1,0 +1,56 @@
+
+apply plugin: 'org.xbib.gradle.plugin.elasticsearch.build'
+
+dependencies {
+    compile "org.apache.httpcomponents:httpcore:${project.property('httpcore.version')}"
+    compile "org.xbib.elasticsearch:randomizedtesting:${project.property('xbib-elasticsearch-test.version')}"
+    testCompile("junit:junit:${project.property('junit.version')}") {
+        exclude module: "hamcrest-core"
+    }
+    testCompile "org.hamcrest:hamcrest-all:${project.property('hamcrest.version')}"
+}
+
+afterEvaluate {
+    compileJava {
+        inputs.property("moduleName", 'org.xbib.elasticsearch.client.resttest')
+        doFirst {
+            options.compilerArgs = ['--module-path', classpath.asPath]
+            classpath = files()
+        }
+    }
+    compileTestJava {
+        inputs.property("moduleName", 'org.xbib.elasticsearch.client.resttest.test')
+        doFirst {
+            options.compilerArgs = ['--module-path', classpath.asPath]
+            classpath = files()
+        }
+    }
+    javadoc {
+        inputs.property("moduleName", 'org.xbib.elasticsearch.client.resttest')
+        doFirst {
+            options.addStringOption('-module-path', classpath.asPath)
+            classpath = files()
+        }
+    }
+}
+
+forbiddenApisMain {
+    //client does not depend on core, so only jdk signatures should be checked
+    signaturesURLs = [getClass().getResource('/forbidden/jdk-signatures.txt')]
+}
+
+forbiddenApisTest {
+    //we are using jdk-internal instead of jdk-non-portable to allow for com.sun.net.httpserver.* usage
+    bundledSignatures -= 'jdk-non-portable'
+    bundledSignatures += 'jdk-internal'
+    //client does not depend on core, so only jdk signatures should be checked
+    signaturesURLs = [getClass().getResource('/forbidden/jdk-signatures.txt')]
+}
+
+jarHell.enabled = false
+dependencyLicenses.enabled = false
+dependenciesInfo.enabled = false
+namingConventions.enabled = false
+thirdPartyAudit.enabled = false
+test.enabled = false
+esTest.enabled = false

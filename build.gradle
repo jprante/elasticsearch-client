@@ -1,0 +1,21 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            url 'http://xbib.org/repository'
+        }
+    }
+    dependencies {
+        classpath "org.xbib.elasticsearch:gradle-plugin-elasticsearch-build:6.3.2.4"
+    }
+}
+
+
+plugins {
+    id "io.codearte.nexus-staging" version "0.11.0"
+    id "org.xbib.gradle.plugin.asciidoctor" version "1.6.0.1"
+}
+
+apply from: rootProject.file('gradle/banner.gradle')
+apply from: rootProject.file('gradle/doc.gradle')
+

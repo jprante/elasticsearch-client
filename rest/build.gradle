@@ -1,0 +1,88 @@
+
+apply plugin: 'org.xbib.gradle.plugin.elasticsearch.build'
+
+archivesBaseName = 'elasticsearch-rest-client'
+
+dependencies {
+    compile "org.apache.httpcomponents:httpclient:${project.property('httpclient.version')}"
+    compile "org.apache.httpcomponents:httpcore:${project.property('httpcore.version')}"
+    compile "org.apache.httpcomponents:httpcore-nio:${project.property('httpcore.version')}"
+    compile "org.apache.httpcomponents:httpasyncclient:${project.property('httpasyncclient.version')}"
+    compile "commons-codec:commons-codec:${project.property('commonscodec.version')}"
+    compile "commons-logging:commons-logging:${project.property('commonslogging.version')}"
+
+    testCompile project(':resttest')
+    testCompile "org.xbib.elasticsearch:randomizedtesting:${project.property('xbib-elasticsearch-test.version')}"
+    testCompile "org.xbib.elasticsearch:securemock:${project.property('securemock.version')}"
+    testCompile "org.elasticsearch:mocksocket:${project.property('mocksocket.version')}"
+    testCompile "org.hamcrest:hamcrest-all:${project.property('hamcrest.version')}"
+}
+
+afterEvaluate {
+    compileJava {
+        inputs.property("moduleName", 'org.xbib.elasticsearch.client.rest')
+        doFirst {
+            options.compilerArgs = ['--module-path', classpath.asPath]
+            classpath = files()
+        }
+    }
+    javadoc {
+        inputs.property("moduleName", 'org.xbib.elasticsearch.client.rest')
+        doFirst {
+            options.addStringOption('-module-path', classpath.asPath)
+            classpath = files()
+        }
+    }
+}
+
+forbiddenApisMain {
+    //client does not depend on server, so only jdk and http signatures should be checked
+    signaturesURLs = [getClass().getResource('/forbidden/jdk-signatures.txt'),
+                      getClass().getResource('/forbidden/http-signatures.txt')]
+}
+
+forbiddenApisTest {
+    //we are using jdk-internal instead of jdk-non-portable to allow for com.sun.net.httpserver.* usage
+    bundledSignatures -= 'jdk-non-portable'
+    bundledSignatures += 'jdk-internal'
+    //client does not depend on server, so only jdk signatures should be checked
+    signaturesURLs = [getClass().getResource('/forbidden/jdk-signatures.txt'),
+                      getClass().getResource('/forbidden/http-signatures.txt')]
+}
+
+jarHell.enabled = false
+
+//namingConventions {
+//    testClass = 'org.elasticsearch.client.RestClientTestCase'
+//    skipIntegTestInDisguise = true
+//}
+
+namingConventions.enabled = false
+
+configurations {
+    main
+}
+
+artifacts {
+    main jar
+}
+
+test.enabled = false
+randomizedTest.enabled = false
+esTest {
+    enabled = true
+    classpath = files(configurations.testRuntime) +
+            configurations.main.artifacts.files + configurations.tests.artifacts.files
+    jvmArg '--add-modules=jdk.httpserver'
+    jvmArg '--add-modules=org.xbib.elasticsearch.client.rest'
+    jvmArg '--add-modules=org.xbib.elasticsearch.client.resttest'
+    jvmArg '--add-modules=org.xbib.elasticsearch.securemock'
+    jvmArg '--add-reads=org.xbib.elasticsearch.securemock=org.xbib.elasticsearch.client.rest'
+
+}
+
+clean {
+    delete fileTree('.') { include '.local*.log' }
+}
+
+apply from: "${rootProject.projectDir}/gradle/publish.gradle"
