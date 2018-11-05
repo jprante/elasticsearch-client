@@ -17,14 +17,20 @@
  * under the License.
  */
 
-module org.xbib.elasticsearch.client.rest {
+module org.xbib.elasticsearch.client.rest.test {
 
-    exports org.elasticsearch.client.rest;
+    exports org.elasticsearch.client.rest.test;
 
+    requires org.xbib.elasticsearch.securemock;
+    requires org.xbib.elasticsearch.mocksocket;
+    requires org.xbib.randomizedtesting;
+    requires org.xbib.elasticsearch.client.resttest;
+    requires org.xbib.elasticsearch.client.rest;
+    requires junit;
+    requires hamcrest.all;
+    requires jdk.httpserver;
     requires httpcore;
     requires httpcore.nio;
     requires httpclient;
     requires httpasyncclient;
-    requires commons.logging;
-    requires commons.codec;
 }

@@ -3,7 +3,7 @@ apply plugin: 'org.xbib.gradle.plugin.elasticsearch.build'
 
 dependencies {
     compile "org.apache.httpcomponents:httpcore:${project.property('httpcore.version')}"
-    compile "org.xbib.elasticsearch:randomizedtesting:${project.property('xbib-elasticsearch-test.version')}"
+    compile "org.xbib.elasticsearch:randomizedtesting:${project.property('elasticsearch-libs.version')}"
     testCompile("junit:junit:${project.property('junit.version')}") {
         exclude module: "hamcrest-core"
     }
