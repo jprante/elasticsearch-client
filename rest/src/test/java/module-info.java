@@ -21,16 +21,16 @@ module org.xbib.elasticsearch.client.rest.test {
 
     exports org.elasticsearch.client.rest.test;
 
-    requires org.xbib.elasticsearch.securemock;
-    requires org.xbib.elasticsearch.mocksocket;
-    requires org.xbib.randomizedtesting;
-    requires org.xbib.elasticsearch.client.resttest;
-    requires org.xbib.elasticsearch.client.rest;
+    requires jdk.httpserver;
     requires junit;
     requires hamcrest.all;
-    requires jdk.httpserver;
     requires httpcore;
     requires httpcore.nio;
     requires httpclient;
     requires httpasyncclient;
+    requires org.xbib.elasticsearch.client.resttest;
+    requires org.xbib.elasticsearch.client.rest;
+    requires org.xbib.elasticsearch.securemock;
+    requires org.xbib.elasticsearch.mocksocket;
+    requires org.xbib.elasticsearch.randomizedtesting;
 }

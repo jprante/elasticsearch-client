@@ -12,10 +12,9 @@ dependencies {
     compile "commons-logging:commons-logging:${project.property('commonslogging.version')}"
 
     testCompile project(':resttest')
-    testCompile "org.xbib.elasticsearch:randomizedtesting:${project.property('elasticsearch-libs.version')}"
+    testCompile "org.xbib.elasticsearch:randomizedtesting-junit4-ant:${project.property('elasticsearch-libs.version')}"
     testCompile "org.xbib.elasticsearch:securemock:${project.property('elasticsearch-libs.version')}"
     testCompile "org.xbib.elasticsearch:mocksocket:${project.property('elasticsearch-libs.version')}"
-    testCompile "org.hamcrest:hamcrest-all:${project.property('hamcrest.version')}"
 }
 
 afterEvaluate {
@@ -68,8 +67,8 @@ jarHell.enabled = false
 //    skipIntegTestInDisguise = true
 //}
 
+// requires elasticsearch-test-framework
 namingConventions.enabled = false
-
 test.enabled = false
 randomizedTest.enabled = false
 esTest.enabled = true

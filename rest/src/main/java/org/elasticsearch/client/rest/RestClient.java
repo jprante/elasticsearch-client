@@ -97,8 +97,7 @@ public class RestClient implements Closeable {
 
     private final CloseableHttpAsyncClient client;
     // We don't rely on default headers supported by HttpAsyncClient as those cannot be replaced.
-    // These are package private for tests.
-    final List<Header> defaultHeaders;
+    private final List<Header> defaultHeaders;
     private final long maxRetryTimeoutMillis;
     private final String pathPrefix;
     private final AtomicInteger lastHostIndex = new AtomicInteger(0);
@@ -114,6 +113,10 @@ public class RestClient implements Closeable {
         this.failureListener = failureListener;
         this.pathPrefix = pathPrefix;
         setHosts(hosts);
+    }
+
+    public List<Header> getDefaultHeaders() {
+        return defaultHeaders;
     }
 
     /**

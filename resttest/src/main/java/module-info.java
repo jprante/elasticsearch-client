@@ -21,6 +21,6 @@ module org.xbib.elasticsearch.client.resttest {
 
     exports org.elasticsearch.client.resttest;
 
-    requires org.xbib.randomizedtesting;
     requires httpcore;
+    requires org.xbib.elasticsearch.randomizedtesting;
 }
