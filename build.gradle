@@ -10,7 +10,6 @@ buildscript {
     }
 }
 
-
 plugins {
     id "io.codearte.nexus-staging" version "0.11.0"
     id "org.xbib.gradle.plugin.asciidoctor" version "1.6.0.1"
@@ -18,4 +17,3 @@ plugins {
 
 apply from: rootProject.file('gradle/banner.gradle')
 apply from: rootProject.file('gradle/doc.gradle')
-
